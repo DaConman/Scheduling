@@ -1,34 +1,62 @@
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class SJF {
-	
-	private float averageTurnaroundTime;
-	private float averageResponseTime;
 	
 	public static void main(String[] args) 
 	{
 		if(args.length > 0) {
-			String inputfilename = args[0];
-			File inputfile = new File(inputfilename);
+			//URL = getClass().getResource(arg)
+			//String inputfilename = args[0];
+			File inputfile = new File(args[0]);
+			Scanner scan = null;
 			try {
-				Scanner scan = new Scanner(inputfile);
+				scan = new Scanner(new FileInputStream(inputfile));
 				int numJobs = Integer.parseInt(scan.nextLine());
 				SJF sjf = new SJF();
 				
-				Job[] jobs = new Job[numJobs];
-				for(int i = 1; i < numJobs; i++)
+				List<Job> jobs = new ArrayList<Job>(numJobs);
+				List<Job> runjobs = new ArrayList<Job>(numJobs);
+				String temp = null;
+				int temparrive = 0;
+				int tempexecute = 0;
+				for(int i = 0; i < numJobs; i++)
 				{
-					jobs[i] = new Job(Integer.parseInt(scan.nextLine()), Integer.parseInt(scan.nextLine()));
+					temp = scan.nextLine();
+					while(temp.equals(""))
+					{
+						temp = scan.nextLine();
+					}
+					temparrive = Integer.parseInt(temp);
+					tempexecute = Integer.parseInt(scan.nextLine());
+					
+					jobs.add(new Job(temparrive, tempexecute, i));
 				}
+				System.out.println("Before sorting");
 				
-				sjf.runJobs(jobs);
+				sjf.printJobs(jobs.toArray(new Job[jobs.size()]));
+				
+				sjf.sortJobs(jobs);
+				
+				System.out.println("After sorting");
+				
+				sjf.printJobs(jobs.toArray(new Job[jobs.size()]));
+				
+				Collections.copy(runjobs, jobs);
+				sjf.runJobsInSJF(runjobs);
 				
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				System.exit(1);
+			}
+			finally{
+				scan.close();
 			}
 		}
 		else {
@@ -36,29 +64,34 @@ public class SJF {
 		}
 	}	
 	
-	private void runJobs(Job[] jobs)
+	private void sortJobs(List<Job> jobs)
 	{
-		
+		Collections.sort(jobs, new Comparator<Job>() {
+			public int compare(Job job1, Job job2) {
+				return job1.compareArriveTo(job2);
+			}
+		});
 	}
 	
-	static class Job
-	{	
-		private int arriveTime;
-		private int executeTime;
-		
-		public Job(int arriveTime, int executeTime)
+	private void runJobsInSJF(List<Job> jobs)
+	{
+		int time = 0;
+		do{
+//			if(jobs.get(0).
+//					
+//					//jobs.get(0).run1TimeUnit(time)){
+//				jobs.remove(0);
+//			}
+			time++;
+		}while(!jobs.isEmpty());
+			
+	}
+	
+	private void printJobs(Job[] jobs)
+	{
+		for(int i = 0; i<jobs.length; i++)
 		{
-			this.arriveTime = arriveTime;
-			this.executeTime = executeTime;
-		}
-		
-		public int getArriveTime()
-		{
-			return arriveTime;
-		}
-		public int getExecuteTime()
-		{
-			return executeTime;
+			System.out.println("Job " + jobs[i].getReadOrder() + " Arrive Time: " + jobs[i].getArriveTime() + " Run Time: " + jobs[i].getExecuteTime());
 		}
 	}
 }
