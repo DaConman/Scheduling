@@ -12,17 +12,14 @@ public class SJF {
 	public static void main(String[] args) 
 	{
 		if(args.length > 0) {
-			//URL = getClass().getResource(arg)
-			//String inputfilename = args[0];
 			File inputfile = new File(args[0]);
 			Scanner scan = null;
 			try {
 				scan = new Scanner(new FileInputStream(inputfile));
 				int numJobs = Integer.parseInt(scan.nextLine());
-				SJF sjf = new SJF();
+				SJF SJF = new SJF();
 				
 				List<Job> jobs = new ArrayList<Job>(numJobs);
-				List<Job> runjobs = new ArrayList<Job>(numJobs);
 				String temp = null;
 				int temparrive = 0;
 				int tempexecute = 0;
@@ -38,19 +35,21 @@ public class SJF {
 					
 					jobs.add(new Job(temparrive, tempexecute, i));
 				}
-				System.out.println("Before sorting");
+				//System.out.println("Before sorting");
 				
-				sjf.printJobs(jobs.toArray(new Job[jobs.size()]));
+				//SJF.printJobs(jobs.toArray(new Job[jobs.size()]));
 				
-				sjf.sortJobs(jobs);
+				SJF.sortJobs(jobs);
 				
-				System.out.println("After sorting");
+				//System.out.println("After sorting");
 				
-				sjf.printJobs(jobs.toArray(new Job[jobs.size()]));
+				//SJF.printJobs(jobs.toArray(new Job[jobs.size()]));
 				
-				Collections.copy(runjobs, jobs);
-				sjf.runJobsInSJF(runjobs);
+				List<Job> runjobs = new ArrayList<Job>(jobs);
+				jobs = SJF.runJobsInSJF(runjobs);
 				
+				System.out.println(String.format("%.5f", Job.MeanTurnaroundTime(jobs.toArray(new Job[jobs.size()]))));
+				System.out.println(String.format("%.5f", Job.MeanResponseTime(jobs.toArray(new Job[jobs.size()]))));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				System.exit(1);
@@ -73,18 +72,38 @@ public class SJF {
 		});
 	}
 	
-	private void runJobsInSJF(List<Job> jobs)
+	private List<Job> runJobsInSJF(List<Job> jobs)
 	{
+		List<Job> jobsout = new ArrayList<Job>(jobs);
+		
 		int time = 0;
-		do{
-//			if(jobs.get(0).
-//					
-//					//jobs.get(0).run1TimeUnit(time)){
-//				jobs.remove(0);
-//			}
-			time++;
-		}while(!jobs.isEmpty());
+		//int jobnum = 1; //Debug
+		Job currentJob = jobs.get(0);
+		//System.out.print("Begin jobs: "); //Debug
+		while(!jobs.isEmpty())
+		{	
+			currentJob = jobs.get(0);
+			if(currentJob.getArriveTime() <= time)
+			{
+				//System.out.println("Job " + jobnum + " started"); //Debug
+				//System.out.print("Time: ");//r
+				while(!currentJob.isDone())
+				{
+					currentJob.run1TimeUnit(time);
+					//System.out.print(" " + time);
+					time++; 
+				}
+				//System.out.println();//r
+				jobsout.add(jobs.remove(0));
+				//jobnum++;
+			}
+			else{
+				//System.out.println("Time: " + time);
+				time++;
+			}
+		}
 			
+		return jobsout;
 	}
 	
 	private void printJobs(Job[] jobs)
@@ -94,5 +113,5 @@ public class SJF {
 			System.out.println("Job " + jobs[i].getReadOrder() + " Arrive Time: " + jobs[i].getArriveTime() + " Run Time: " + jobs[i].getExecuteTime());
 		}
 	}
+	
 }
-

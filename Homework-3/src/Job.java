@@ -32,14 +32,14 @@ public class Job
 	{
 		if(timeLeft == executeTime)
 			startTime = currentTime;
-		if(timeLeft > 0)
+		if(!isDone())
 		{
 			timeLeft--;
-		}
-		else
-		{
-			done = true;
-			endTime = currentTime;
+			if(timeLeft == 0)
+			{
+				done = true;
+				endTime = currentTime;
+			}
 		}
 		return isDone();
 	}
