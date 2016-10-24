@@ -106,6 +106,7 @@ public class FCFS {
 		return jobsout;
 	}
 	
+	@SuppressWarnings("unused")
 	private void printJobs(Job[] jobs)
 	{
 		for(int i = 0; i<jobs.length; i++)

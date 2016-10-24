@@ -14,7 +14,6 @@ public class Job
 		this.jobid = jobid;
 		this.arriveTime = arriveTime;
 		this.executeTime = executeTime;
-		this.readOrder = readOrder;
 		this.timeLeft = executeTime;
 	}
 	
@@ -42,7 +41,7 @@ public class Job
 			if(timeLeft == 0)
 			{
 				done = true;
-				endTime = currentTime;
+				endTime = currentTime + 1;
 			}
 		}
 		return isDone();
@@ -50,7 +49,7 @@ public class Job
 	
 	public int TurnaroundTime()
 	{
-		return endTime - arriveTime + 1;
+		return endTime - arriveTime;
 	}
 	
 	public int ResponseTime()

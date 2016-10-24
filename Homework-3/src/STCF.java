@@ -78,24 +78,24 @@ public class STCF {
 		List<Job> jobsout = new ArrayList<Job>();
 		
 		int time = 0;
-		int jobnum = 1;
+		//int jobnum = 1;
 		Job currentJob = selectJob(jobs, time);
-		System.out.print("Begin jobs: ");
+		//System.out.print("Begin jobs: ");
 		while(!jobs.isEmpty())
 		{	
 			currentJob = selectJob(jobs, time);
 			if(currentJob.getArriveTime() <= time)
 			{
-				System.out.println("Job " + currentJob.getJobId() + " run");
-				System.out.print("Time: " + time +  "  Time Left: " + currentJob.getTimeLeft());
+				//System.out.println("Job " + currentJob.getJobId() + " run");
+				//System.out.print("Time: " + time +  "  Time Left: " + currentJob.getTimeLeft());
 				if(currentJob.run1TimeUnit(time)){
 					jobsout.add(jobs.remove(jobs.indexOf(currentJob)));
 				}
 				time++; 
-				System.out.println();
+				//System.out.println();
 			}
 			else{
-				System.out.println("Time: " + time);
+				//System.out.println("Time: " + time);
 				time++;
 			}
 		}
@@ -121,6 +121,7 @@ public class STCF {
 		return execute;
 	}
 	
+	@SuppressWarnings("unused")
 	private void printJobs(Job[] jobs)
 	{
 		for(int i = 0; i<jobs.length; i++)

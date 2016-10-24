@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.ListIterator;
 
-public class SJF {
+public class FCFS1 {
 	
 	public static void main(String[] args) 
 	{
@@ -18,7 +17,7 @@ public class SJF {
 			try {
 				scan = new Scanner(new FileInputStream(inputfile));
 				int numJobs = Integer.parseInt(scan.nextLine());
-				SJF SJF = new SJF();
+				FCFS1 FCFS1 = new FCFS1();
 				
 				List<Job> jobs = new ArrayList<Job>(numJobs);
 				String temp = null;
@@ -38,16 +37,16 @@ public class SJF {
 				}
 				//System.out.println("Before sorting");
 				
-				//SJF.printJobs(jobs.toArray(new Job[jobs.size()]));
+				//FCFS1.printJobs(jobs.toArray(new Job[jobs.size()]));
 				
-				SJF.sortJobs(jobs);
+				FCFS1.sortJobs(jobs);
 				
 				//System.out.println("After sorting");
 				
-				//SJF.printJobs(jobs.toArray(new Job[jobs.size()]));
+				//FCFS1.printJobs(jobs.toArray(new Job[jobs.size()]));
 				
 				List<Job> runjobs = new ArrayList<Job>(jobs);
-				jobs = SJF.runJobsInSJF(runjobs);
+				jobs = FCFS1.runJobsInFCFS1(runjobs);
 				
 				System.out.println(String.format("%.5f", Job.MeanTurnaroundTime(jobs.toArray(new Job[jobs.size()]))));
 				System.out.println(String.format("%.5f", Job.MeanResponseTime(jobs.toArray(new Job[jobs.size()]))));
@@ -73,31 +72,29 @@ public class SJF {
 		});
 	}
 	
-	private List<Job> runJobsInSJF(List<Job> jobs)
+	private List<Job> runJobsInFCFS1(List<Job> jobs)
 	{
 		List<Job> jobsout = new ArrayList<Job>();
 		
 		int time = 0;
-		//int jobnum = 1;
-		Job currentJob = selectJob(jobs, time);
-		//System.out.print("Begin jobs: ");
+		//int jobnum = 1; //Debug
+		Job currentJob = jobs.get(0);
+		//System.out.print("Begin jobs: "); //Debug
 		while(!jobs.isEmpty())
 		{	
+			currentJob = jobs.get(0);
 			if(currentJob.getArriveTime() <= time)
 			{
-				//System.out.println("Job " + jobnum + " started");
-				//System.out.print("Time: ");
+				//System.out.println("Job " + jobnum + " started"); //Debug
+				//System.out.print("Time: ");//r
 				while(!currentJob.isDone())
 				{
 					currentJob.run1TimeUnit(time);
 					//System.out.print(" " + time);
 					time++; 
 				}
-				//System.out.println();
-				if(!jobs.isEmpty()) {
-					jobsout.add(jobs.remove(jobs.indexOf(currentJob)));
-				}
-				currentJob = selectJob(jobs, time);
+				//System.out.println();//r
+				jobsout.add(jobs.remove(0));
 				//jobnum++;
 			}
 			else{
@@ -107,25 +104,6 @@ public class SJF {
 		}
 			
 		return jobsout;
-	}
-	
-	private Job selectJob(List<Job> jobs, int time)
-	{
-		ListIterator<Job> JobIterator = jobs.listIterator();
-		Job temp = null;
-		Job execute = null;
-		while(JobIterator.hasNext())
-		{
-			temp = JobIterator.next();
-			if(execute == null)
-				execute = temp;
-			if(temp.getArriveTime() <= time && temp.getExecuteTime() < execute.getExecuteTime())
-			{
-				execute = temp;
-			}
-		}
-		
-		return execute;
 	}
 	
 	@SuppressWarnings("unused")
