@@ -5,7 +5,9 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class SJF {
 	
@@ -33,7 +35,7 @@ public class SJF {
 					temparrive = Integer.parseInt(temp);
 					tempexecute = Integer.parseInt(scan.nextLine());
 					
-					jobs.add(new Job(temparrive, tempexecute, i));
+					jobs.add(new Job(i, temparrive, tempexecute));
 				}
 				//System.out.println("Before sorting");
 				
@@ -74,27 +76,29 @@ public class SJF {
 	
 	private List<Job> runJobsInSJF(List<Job> jobs)
 	{
-		List<Job> jobsout = new ArrayList<Job>(jobs);
+		List<Job> jobsout = new ArrayList<Job>();
 		
 		int time = 0;
-		//int jobnum = 1; //Debug
-		Job currentJob = jobs.get(0);
-		//System.out.print("Begin jobs: "); //Debug
+		//int jobnum = 1;
+		Job currentJob = selectJob(jobs, time);
+		//System.out.print("Begin jobs: ");
 		while(!jobs.isEmpty())
 		{	
-			currentJob = jobs.get(0);
 			if(currentJob.getArriveTime() <= time)
 			{
-				//System.out.println("Job " + jobnum + " started"); //Debug
-				//System.out.print("Time: ");//r
+				//System.out.println("Job " + jobnum + " started");
+				//System.out.print("Time: ");
 				while(!currentJob.isDone())
 				{
 					currentJob.run1TimeUnit(time);
 					//System.out.print(" " + time);
 					time++; 
 				}
-				//System.out.println();//r
-				jobsout.add(jobs.remove(0));
+				//System.out.println();
+				if(!jobs.isEmpty()) {
+					jobsout.add(jobs.remove(jobs.indexOf(currentJob)));
+				}
+				currentJob = selectJob(jobs, time);
 				//jobnum++;
 			}
 			else{
@@ -104,6 +108,25 @@ public class SJF {
 		}
 			
 		return jobsout;
+	}
+	
+	private Job selectJob(List<Job> jobs, int time)
+	{
+		ListIterator<Job> JobIterator = jobs.listIterator();
+		Job temp = null;
+		Job execute = null;
+		while(JobIterator.hasNext())
+		{
+			temp = JobIterator.next();
+			if(execute == null)
+				execute = temp;
+			if(temp.getArriveTime() <= time && temp.getExecuteTime() < execute.getExecuteTime())
+			{
+				execute = temp;
+			}
+		}
+		
+		return execute;
 	}
 	
 	private void printJobs(Job[] jobs)

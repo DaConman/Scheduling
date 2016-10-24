@@ -33,7 +33,7 @@ public class FCFS {
 					temparrive = Integer.parseInt(temp);
 					tempexecute = Integer.parseInt(scan.nextLine());
 					
-					jobs.add(new Job(temparrive, tempexecute, i));
+					jobs.add(new Job(i, temparrive, tempexecute));
 				}
 				//System.out.println("Before sorting");
 				
@@ -74,7 +74,7 @@ public class FCFS {
 	
 	private List<Job> runJobsInFCFS(List<Job> jobs)
 	{
-		List<Job> jobsout = new ArrayList<Job>(jobs);
+		List<Job> jobsout = new ArrayList<Job>();
 		
 		int time = 0;
 		//int jobnum = 1; //Debug

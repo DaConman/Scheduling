@@ -1,5 +1,6 @@
 public class Job
 {	
+	private int jobid;
 	private int arriveTime;
 	private int executeTime;
 	private int readOrder;
@@ -8,8 +9,9 @@ public class Job
 	private int timeLeft;
 	private boolean done = false;
 	
-	public Job(int arriveTime, int executeTime, int readOrder)
+	public Job(int jobid, int arriveTime, int executeTime)
 	{
+		this.jobid = jobid;
 		this.arriveTime = arriveTime;
 		this.executeTime = executeTime;
 		this.readOrder = readOrder;
@@ -17,11 +19,13 @@ public class Job
 	}
 	
 	public boolean isDone(){return done;}
+	public int getJobId(){return jobid;}
 	public int getArriveTime(){return arriveTime;}
 	public int getExecuteTime(){return executeTime;}
 	public int getReadOrder(){return readOrder;}
 	public int getStartTime(){return startTime;}
 	public int getEndTime(){return endTime;}
+	public int getTimeLeft(){return timeLeft;}
 	
 	public int compareArriveTo(Job otherJob)
 	{
@@ -46,7 +50,7 @@ public class Job
 	
 	public int TurnaroundTime()
 	{
-		return endTime - arriveTime;
+		return endTime - arriveTime + 1;
 	}
 	
 	public int ResponseTime()
